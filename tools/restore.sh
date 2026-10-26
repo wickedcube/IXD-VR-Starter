@@ -1,31 +1,57 @@
 #!/usr/bin/env bash
 # Go back to an earlier save without losing anything.
-#   tools/restore.sh            list recent saves
-#   tools/restore.sh <id>       make the project look like save <id>
-# Your current work is saved first, and the restore becomes a new save,
-# so you can always undo it by restoring the save you came from.
-set -euo pipefail
+# Usage:
+#   tools/restore.sh                 list recent saves
+#   tools/restore.sh <number>        restore the whole project to that save
+#   tools/restore.sh <number> <path> restore one file or folder from that save
+# Close Unity before restoring.
+set -u
 cd "$(dirname "$0")/.."
 
-if [[ $# -eq 0 ]]; then
-  echo "Recent saves (newest first). Pick an id from the first column:"
-  git log -n 20 --date=format:'%a %d %b %H:%M' --pretty=format:'%h  %ad  %s'
+saves=()
+while IFS= read -r line; do
+  saves+=("$line")
+done < <(git log -n 20 --format='%h|%ad|%s' --date=format:'%a %d %b %H:%M')
+if [ "${#saves[@]}" -eq 0 ]; then echo "No saves found yet."; exit 1; fi
+
+if [ $# -eq 0 ]; then
+  echo "Recent saves (1 is the newest):"
+  i=1
+  for s in "${saves[@]}"; do
+    IFS='|' read -r h d m <<< "$s"
+    printf "%3d  %s  %s\n" "$i" "$d" "$m"
+    i=$((i+1))
+  done
   echo
-  echo
-  echo "Then run: tools/restore.sh <id>"
+  echo "To restore: tools/restore.sh <number>"
   exit 0
 fi
 
-target="$1"
-git rev-parse --verify -q "$target^{commit}" >/dev/null || { echo "No save with id '$target'."; exit 1; }
+n="$1"
+if ! [[ "$n" =~ ^[0-9]+$ ]] || [ "$n" -lt 1 ] || [ "$n" -gt "${#saves[@]}" ]; then
+  echo "Pick a number between 1 and ${#saves[@]}. Run tools/restore.sh to see the list."
+  exit 1
+fi
+IFS='|' read -r hash date msg <<< "${saves[$((n-1))]}"
 
-echo "Close Unity first. Press Enter to continue, Ctrl+C to cancel."
-read -r
-
+# Keep the current state first so a restore can always be undone.
 git add -A
-git diff --cached --quiet || git commit -q -m "Auto-save before restoring $target"
+if ! git diff --cached --quiet; then
+  git commit -q -m "Auto-save before restore ($(date '+%Y-%m-%d %H:%M'))"
+  echo "Your current work was saved first, so nothing is lost."
+fi
 
-git restore --source="$target" --staged --worktree -- .
-git add -A
-git commit -q -m "Restore project to $target" || echo "Already identical to $target."
-echo "Restored to $target. Reopen Unity."
+if [ $# -ge 2 ]; then
+  git checkout "$hash" -- "$2" || exit 1
+  if git commit -q -m "Restore $2 from: $msg"; then
+    echo "Restored $2 to how it was on $date."
+  else
+    echo "$2 is already the same as in that save, so nothing changed."
+    exit 0
+  fi
+else
+  git read-tree --reset -u "$hash" || exit 1
+  git commit -q --allow-empty -m "Restore project to: $msg ($hash)"
+  echo "Project restored to how it was on $date ($msg)."
+fi
+echo "To undo this restore, run tools/restore.sh and pick the save just below the restore."

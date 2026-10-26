@@ -57,7 +57,7 @@ public class TeamSaveWindow : EditorWindow
         {
             EditorGUILayout.HelpBox(
                 "Git is not installed (or Unity can't find it).\n\n" +
-                "Run the installer in the project's setup folder (install-mac.command or install-windows.bat), " +
+                "Run the setup script in the project's setup folder (Setup-Mac.command or Setup-Windows.bat), " +
                 "then restart your computer and Unity.",
                 MessageType.Error);
             if (GUILayout.Button("Check again")) { gitPath = FindGit(); Refresh(); }
