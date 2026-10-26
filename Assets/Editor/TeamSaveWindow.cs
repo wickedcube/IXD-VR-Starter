@@ -137,7 +137,9 @@ public class TeamSaveWindow : EditorWindow
 
         EditorGUILayout.HelpBox(
             "Every student needs a different app ID, or installing your build on a shared headset " +
-            "replaces someone else's app.", MessageType.Info);
+            "replaces someone else's app. It is normally set for you from your GitHub account when you " +
+            "open the project; use this only to choose your own.", MessageType.Info);
+        EditorGUILayout.LabelField("Current app ID", PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android));
         studentName = EditorGUILayout.TextField("Your name", studentName);
         appTitle = EditorGUILayout.TextField("App title", appTitle);
 
@@ -160,12 +162,8 @@ public class TeamSaveWindow : EditorWindow
 
     private static string BuildAppId(string name)
     {
-        var sb = new StringBuilder();
-        foreach (var c in (name ?? "").ToLowerInvariant())
-        {
-            if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) sb.Append(c);
-        }
-        return sb.Length == 0 ? null : AppIdPrefix + sb;
+        var segment = AppIdGuard.Segment(name);
+        return segment == null ? null : AppIdPrefix + segment;
     }
 
     private void Save()

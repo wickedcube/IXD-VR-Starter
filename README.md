@@ -27,8 +27,10 @@ Each student works in their own copy, so nobody's changes collide. You only do t
 1. On GitHub, open this repo and click **Use this template → Create a new repository**. Name it `ixd-vr-<yourname>` and create it. *(Your instructor must turn on "Template repository" in this repo's Settings first.)*
 2. In **GitHub Desktop**, choose **File → Clone repository**, pick your new repo, and clone it somewhere **outside** iCloud, OneDrive and Dropbox. Syncing tools corrupt Unity projects.
 3. Click **Open in Unity** in GitHub Desktop, or add the folder in Unity Hub. The first open takes several minutes.
-4. In Unity, choose **Team → Save and Restore**, open **First-time setup: name your app**, enter your name and app title, and click **Apply**. Every student needs a different app ID. Otherwise installing your build on a shared headset **overwrites** someone else's app.
-5. Click **Save** in the same window.
+4. Open the project in Unity. It gives your app a unique package name automatically, built from your GitHub account and repo name (for example `com.ixd.yourname.ixdvryourname`). Every student's name is different, so several students can install their builds on the same headset without overwriting each other. Check it under **Project Settings → Player → Other Settings → Package Name**.
+5. In **Team → Save and Restore**, click **Save** to keep that change.
+
+If you try to build while the package name is still the template's, the build stops with a message. To choose your own name, use **Team → Save and Restore → First-time setup**.
 
 Your copy has no link to the original. If the instructor adds updates to the template, ask them how to pull those in.
 
@@ -140,7 +142,7 @@ On first launch the headset asks for **Spatial Data** permission, which is neede
 
 ## Project settings of note
 
-- Application ID: `com.ixd.vrstarter` in the template. Students replace it via **Team → Save and Restore**, or in **Project Settings → Player → Android** before publishing.
+- Application ID: `com.ixd.vrstarter` in the template. Each student's copy replaces it automatically with `com.ixd.<github-user>.<repo>`. You can change it in **Team → Save and Restore**, or in **Project Settings → Player → Android** before publishing.
 - Company / product name: `IXD` / `IXD VR Starter`
 - Min SDK 32, target SDK 34, IL2CPP, ARM64
 - Render pipeline: URP
