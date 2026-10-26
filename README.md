@@ -2,21 +2,33 @@
 
 A Meta Quest mixed-reality starter built on the [Meta MR Utility Kit](https://developers.meta.com/horizon/documentation/unity/unity-mr-utility-kit-overview) (MRUK). It is based on Meta's official [Unity-MRUtilityKitSample](https://github.com/oculus-samples/Unity-MRUtilityKitSample) and is configured to build an APK and run on a real headset.
 
+## One-time computer setup
+
+Do this once per computer. No terminal needed.
+
+| Your computer | Double-click | What it installs |
+| --- | --- | --- |
+| Mac | `setup/install-mac.command` | Git, GitHub Desktop (and checks for Unity Hub) |
+| Windows | `setup/install-windows.bat` | Git, GitHub Desktop, Unity Hub |
+
+- **Mac:** if macOS says the file can't be opened, right-click it → **Open** → **Open**. A window may ask you to install the Command Line Tools: click **Install** and wait.
+- **Windows:** approve the admin prompts. Restart the computer afterwards.
+- You also need the Unity editor with **Android Build Support**. Install it from Unity Hub (see [Requirements](#requirements)).
+- Finally, open **GitHub Desktop** and sign in with your GitHub account.
+
+The installers only run Apple's and Microsoft's own installers or download from GitHub's official links, and you can read them first. They are in the `setup/` folder.
+
+> The installers don't need this project to exist yet. If you don't have the files, ask your instructor for just the `setup` folder, or download it from the repo page on GitHub.
+
 ## Make your own copy
 
 Each student works in their own copy, so nobody's changes collide. You only do this once.
 
-1. On GitHub, click **Use this template → Create a new repository**. Name it `ixd-vr-<yourname>`, set it to **Private** (or Public if your instructor asks), and create it. *(Your instructor must turn on "Template repository" in this repo's Settings first.)*
-2. Install [GitHub Desktop](https://desktop.github.com/) and sign in. Choose **File → Clone repository**, pick your new repo, and clone it somewhere **outside** iCloud, OneDrive and Dropbox. Syncing tools corrupt Unity projects.
-3. Open the folder in Unity Hub (see [Requirements](#requirements)). The first open takes several minutes.
-4. Give your app its own name and ID. Close Unity, then run this from the project folder:
-
-   ```bash
-   tools/setup-student.sh "yourname" "My App Title"
-   ```
-
-   This sets an app ID like `com.ixd.yourname`. Every student needs a different ID. Otherwise installing your build on a shared headset **overwrites** someone else's app. Windows users can run the script from **Git Bash**, which is installed with Git, or edit **Project Settings → Player** by hand.
-5. Save it: `tools/save.sh "Set up my project"`.
+1. On GitHub, open this repo and click **Use this template → Create a new repository**. Name it `ixd-vr-<yourname>` and create it. *(Your instructor must turn on "Template repository" in this repo's Settings first.)*
+2. In **GitHub Desktop**, choose **File → Clone repository**, pick your new repo, and clone it somewhere **outside** iCloud, OneDrive and Dropbox. Syncing tools corrupt Unity projects.
+3. Click **Open in Unity** in GitHub Desktop, or add the folder in Unity Hub. The first open takes several minutes.
+4. In Unity, choose **Team → Save and Restore**, open **First-time setup: name your app**, enter your name and app title, and click **Apply**. Every student needs a different app ID. Otherwise installing your build on a shared headset **overwrites** someone else's app.
+5. Click **Save** in the same window.
 
 Your copy has no link to the original. If the instructor adds updates to the template, ask them how to pull those in.
 
@@ -24,31 +36,30 @@ Your copy has no link to the original. If the instructor adds updates to the tem
 
 Think of a *save* as a checkpoint of the whole project that you can return to. Save often: after something works, before trying something risky, and at the end of every session.
 
-### Quickest way: the helper scripts
+### In Unity: Team → Save and Restore
 
-Run these from the project folder in Terminal (macOS/Linux) or Git Bash (Windows).
-
-| I want to... | Run |
+| I want to... | Do this |
 | --- | --- |
-| Save my work and upload it to GitHub | `tools/save.sh "what I changed"` |
-| See my earlier saves | `tools/restore.sh` |
-| Go back to an earlier save | `tools/restore.sh <id>` using an id from the list |
+| Save my work | Type what you changed, click **Save**. Unity saves your scenes for you |
+| See my earlier saves | They're listed in the same window, newest first |
+| Go back to an earlier save | Click **Restore** next to it |
+| Upload to GitHub | **Save** tries automatically. If it says "Saved on your computer", click **Push origin** in GitHub Desktop (the window opens it for you) |
 
-Restoring never deletes anything. It first saves your current work, then makes the project look like the old save and records that as a new save. Changed your mind? Restore the save you came from.
+Restoring never deletes anything. It saves your current work first, then makes the project look like the old save and records that as a new save. Changed your mind? Restore the save you came from.
 
-### Using GitHub Desktop instead
+### In GitHub Desktop
 
-1. Unity writes changes to disk when you press **File → Save** (Ctrl/Cmd+S). Do that first.
-2. In GitHub Desktop, the **Changes** tab lists what changed. Type a short summary in the box at the bottom left and click **Commit to main**. This is your save.
-3. Click **Push origin** at the top. This uploads your save to GitHub, so a lost or broken laptop doesn't cost you your work.
-4. To go back: open the **History** tab, right-click a save, and choose **Revert changes in commit**. Alternatively, right-click → **Create Branch from Commit** to try the old version without touching your current one.
+You can do the same things there, and it's the best place to see exactly what changed.
+
+1. The **Changes** tab lists what changed. Type a summary at the bottom left and click **Commit to main**. This is your save.
+2. Click **Push origin** at the top. This uploads your save, so a lost or broken laptop doesn't cost you your work.
+3. To go back: open the **History** tab, right-click a save, and choose **Revert changes in commit**.
 
 ### Rules that prevent most problems
 
-- **Save Unity first.** Unsaved scene changes are not on disk, so they are not in your save.
-- **Close Unity before restoring**, and reopen it after.
+- **Save in Unity first.** Unsaved scene changes aren't on disk, so they aren't in your save. The Save button does this for you.
 - **Keep `.meta` files.** Each asset has a `.meta` file next to it. Never delete or exclude them, and never commit just one of the pair.
-- **Never commit** `Library/`, `Temp/`, `Builds/` or `.apk` files. They are already ignored, and they are huge.
+- **Never commit** `Library/`, `Temp/`, `Builds/` or `.apk` files. They're already ignored, and they're huge.
 - **Individual files over 100 MB** are rejected by GitHub. If you add large videos or models, ask your instructor first.
 - **Try risky ideas on a branch.** In GitHub Desktop: **Branch → New branch**. If it goes badly, switch back to `main` and nothing is lost.
 - **Work on one computer at a time**, and push before switching computers. When you sit down at the other one, click **Fetch origin** and then **Pull**.
@@ -57,11 +68,18 @@ Restoring never deletes anything. It first saves your current work, then makes t
 
 | Problem | What to do |
 | --- | --- |
-| "I broke my scene" | `tools/restore.sh`, pick the last good save, then `tools/restore.sh <id>` |
+| "I broke my scene" | Team → Save and Restore, then **Restore** the last good save |
 | "I deleted a file by accident" | Same restore. Or in GitHub Desktop, find it in the Changes tab, right-click → **Discard changes** |
-| Push is rejected or says the branch is behind | Click **Fetch origin**, then **Pull**, then push again |
+| Unity says "Git is not installed" | Run the setup installer, restart your computer, then restart Unity |
+| Save says "Saved on your computer" | Click **Push origin** in GitHub Desktop. You're not signed in to GitHub in the app, or you're offline |
+| Push is rejected or says the branch is behind | In GitHub Desktop, click **Fetch origin**, then **Pull**, then push again |
 | Unity shows a lot of changes you didn't make | Normal after opening a project in a new Unity version. Save them as one commit |
 | Conflict message | Stop and ask your instructor. Don't pick sides blindly in scene or prefab files |
+
+### Terminal alternative
+
+Prefer the command line? The same actions exist as scripts for macOS/Linux and Git Bash:
+`tools/save.sh "message"`, `tools/restore.sh`, `tools/restore.sh <id>`, and `tools/setup-student.sh "name"`.
 
 ## What's included
 
@@ -122,7 +140,7 @@ On first launch the headset asks for **Spatial Data** permission, which is neede
 
 ## Project settings of note
 
-- Application ID: `com.ixd.vrstarter` in the template. Students replace it with `tools/setup-student.sh`, or in **Project Settings → Player → Android** before publishing.
+- Application ID: `com.ixd.vrstarter` in the template. Students replace it via **Team → Save and Restore**, or in **Project Settings → Player → Android** before publishing.
 - Company / product name: `IXD` / `IXD VR Starter`
 - Min SDK 32, target SDK 34, IL2CPP, ARM64
 - Render pipeline: URP
